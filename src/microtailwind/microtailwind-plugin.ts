@@ -1,8 +1,8 @@
 
 //@ts-ignore
-import { parseBoxShadowValue, formatBoxShadowValue } from 'tailwindcss/src/util/parseBoxShadowValue'
+import { parseBoxShadowValue, formatBoxShadowValue } from 'tailwindcss/lib/util/parseBoxShadowValue'
 //@ts-ignore
-import flattenColorPalette from 'tailwindcss/src/util/flattenColorPalette'
+import flattenColorPalette from 'tailwindcss/lib/util/flattenColorPalette'
 import { PluginCreator } from "tailwindcss/types/config"
 import { colorWithOpacity } from '../utils/colorWithOpacity'
 

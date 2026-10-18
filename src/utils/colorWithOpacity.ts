@@ -1,5 +1,5 @@
 //@ts-ignore
-import { formatColor, parseColor } from 'tailwindcss/src/util/color'
+import { formatColor, parseColor } from 'tailwindcss/lib/util/color'
 import { CssPropertiesObject } from './typeHelpers'
 
 export const colorWithOpacity = (color: string | ((v: any) => any), opacityVariableName: string, returnPropertiesCallback: (color: string) => CssPropertiesObject) => {
