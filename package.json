@@ -1,6 +1,6 @@
 {
    "name": "microtailwind",
-   "version": "1.8.0",
+   "version": "1.8.1",
    "description": "Package to write shorter tailwind css classes without any conflicts with the default ones.",
    "keywords": [
       "microtailwind",

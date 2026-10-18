@@ -1,5 +1,12 @@
 # microtailwind
 
+## 1.8.1
+
+### Patch Changes
+
+- b1fa811: import tailwind utils from the compiled lib build instead of src, so the plugin loads on Node 22+
+- d9d3390: added CSSProperties export
+
 ## 1.8.0
 
 ### Minor Changes
