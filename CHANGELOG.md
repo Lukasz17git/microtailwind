@@ -1,5 +1,11 @@
 # microtailwind
 
+## 1.8.2
+
+### Patch Changes
+
+- 711ffbb: fixed repository, bugs and homepage URLs (microTailwind -> microtailwind)
+
 ## 1.8.1
 
 ### Patch Changes
