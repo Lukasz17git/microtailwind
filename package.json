@@ -34,7 +34,7 @@
       "build": "tsup src/index.ts --format cjs,esm --dts && npm run build_types",
       "lint": "tsc",
       "ci": "npm run lint && npm run test && npm run build",
-      "release": "npm run lint && npm run test && npm run build && changeset publish"
+      "release": "node scripts/check-changelog.mjs && npm run build && changeset publish"
    },
    "repository": {
       "type": "git",
@@ -45,7 +45,7 @@
    },
    "homepage": "https://github.com/Lukasz17git/microtailwind#readme",
    "devDependencies": {
-      "@changesets/cli": "^2.26.2",
+      "@changesets/cli": "^3.0.3",
       "csstype": "^3.1.2",
       "tsup": "^7.1.0",
       "typescript": "^5.1.6",
