@@ -1,5 +1,11 @@
 # microtailwind
 
+## 1.8.3
+
+### Patch Changes
+
+- 42b8856: Moved CI and npm release into one workflow (no code changes)
+
 ## 1.8.2
 
 ### Patch Changes
