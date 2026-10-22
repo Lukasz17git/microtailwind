@@ -1,109 +1,102 @@
+# Microtailwind
 
-# MICROTAILWIND
+Plugins for **Tailwind CSS v3** with shorter class names, rem values written in px, and light and dark values for utilities and components, with themes.
 
-**TailwindCSS** extension with **usefull add-ons.**
+- **Shorter class names** (`fccc`, `g-4`, `tc-white`), next to Tailwind's own, which keep working.
+- **Expanded theme**: px values with a dot become rem (`gap-16.` -> `gap: 1rem`), plus more %, em, opacity and z-index values.
+- **Dark mode values**: `[light, dark]` pairs for utilities and components, Tailwind's or your own.
+- **Themes**: other values for the same classes under a theme class (`.snow`).
+- Works with the other Tailwind plugins.
 
-**Includes:**
-
-- **Shorter Classnames:** 100% compatibility with the default ones.
-- **Expanded TailwindCSS Default Theme**:  pixel based values transformed into rem values automatically as dot notation.
-- **Easy Dark Mode Integration**: add dark mode support to TailwindCSS utilities, default ones and custom ones.
-- **Custom Themes**: creating custom themes is a breeze.
-- **100% Compatibility with the rest of TailwindCSS plugins**.
-
-**Also includes**:
-
-- tailwind.config.example file as an example for the tailwind config setup
-- Abreviations.js file which includes all microtailwind abreviations.
+The package also has `tailwind.config.example.js` (a full setup) and `abreviations.js` (every short name).
 
 ## Installation
 
 ```bash
- npm install -D microtailwind
+npm install -D microtailwind
 ```
 
 ## Configuration
 
 ```javascript
-//tailwind.config.js
-import { microtailwind, withMicrotailwindExtensions, themeMiddleware } from 'microtailwind'
+// tailwind.config.js
+import plugin from 'tailwindcss/plugin'
+import { microtailwind, themeMiddleware, withMicrotailwindExtensions } from 'microtailwind'
 
 export default {
    /** rest of the config */
-   darkMode: 'class', // IMPORTANT
+   darkMode: 'class', // needed: dark values apply under the 'dark' class
    theme: {
-      extend: withMicrotailwindExtensions({ // extended theme
-         /** your custom extended theme (merges, overrides if colision) */
+      extend: withMicrotailwindExtensions({
+         /** your theme extensions (merged; yours win on conflicts) */
       }),
    },
    plugins: [
-      plugin(microtailwind), // shorter classnames
-      plugin(themeMiddleware(({ addUtility, addComponents, addVariants  })=>{
-         /** Utilities **/
+      plugin(microtailwind), // shorter class names
+      plugin(themeMiddleware(({ addUtility, addComponents, addVariants }) => {
+         /** Utilities */
          addUtility('bg', {
-            'primary': ['aliceblue', '#161616'], // creates bg-primary utility [light, dark]
-            'secondary': '#BA0021', // creates bg-secondary utility
-            'slate-300': [, '#1F2933'], //adds dark mode to this class
+            primary: ['aliceblue', '#161616'], // bg-primary: [light, dark]
+            secondary: '#BA0021', // bg-secondary, same in light and dark
+            'slate-300': [, '#1F2933'], // keeps Tailwind's bg-slate-300 and adds a dark value
          })
-         /** Components **/
+         /** Components */
          addComponents({
-            '.icon': '@apply w-24. h-24.'
-            '.button': '@apply min-w-80. py-12. px-16. br-5.'
+            '.icon': '@apply w-24. h-24.',
+            '.button': '@apply min-w-80. py-12. px-16. br-5.',
             '.button-primary': {
-               _apply: '@apply .button',
+               _apply: '@apply button',
                backgroundColor: ['fuchsia', 'darkmagenta'],
-            }
+            },
          })
-         /** Component Variants **/
-         addVariants<'.button' | '.icon'>({
+         /** Component variants: .button-secondary and .icon-primary */
+         addVariants({
             '.button': {
-               primary: ['@apply bg-sky-600 text-sky-200', '@apply bg-sky-400 text-sky-700']
                secondary: {
-                  _apply: ['@apply text-black', '@apply text-white']
+                  _apply: ['@apply text-black', '@apply text-white'],
                   backgroundColor: ['lime', 'orange'],
-               }
+               },
             },
             '.icon': {
-               primary: {
-                  backgroundColor: ['lime', 'orange'],
-               }
-            }
+               primary: ['@apply bg-sky-600', '@apply bg-sky-400'],
+            },
          })
-      }))
-      plugin(themeMiddleware('snow',({addComponents})=> {
-         /** Components with SNOW THEME **/
+      })),
+      plugin(themeMiddleware('snow', ({ addComponents }) => {
+         /** .button-primary under the "snow" theme */
          addComponents({
             '.button-primary': {
                backgroundColor: ['ghostwhite', 'cornflowerblue'],
-            }
+            },
          })
-
-      }))
+      })),
    ],
 }
 ```
 
-## Typescript Types
+`@apply` takes class names without the dot (`'@apply button'`); with it (`'@apply .button'`) Tailwind fails with "The `.button` class does not exist".
+
+## TypeScript Types
 
 ```typescript
-import {} from 'microtailwind/types'
+import type { AddComponents, AddUtility, AddVariants, Components } from 'microtailwind/types'
 ```
 
 ## Theme and Dark Mode
 
-Add Dark Mode and Theme support to **already existing TailwindCSS projects.**
+Add dark mode and theme values to **existing Tailwind CSS projects.**
 
-Any CSS and @Apply values can be:
+Any CSS and `@apply` value can be:
 
-- **string:** light and dark mode
-- **tupple:** [light, dark] or [ , dark] or [light, ]
+- **string:** the same in light and dark mode
+- **tuple:** `[light, dark]`, `[, dark]` or `[light]`
 
-To be able to use it, you need to add the darkmode class and/or theme class to the parent element of your app.
+Add the `dark` class and the theme class to an element around your app. Values without a theme apply under any ancestor with `dark`; a theme's dark values need both classes on the same element (`.dark.snow .button-primary`).
 
 ```html
-<div class=""> <!-- toggle your dark and theme class -->
-      <!-- your app -->
-</div>
+<body class="dark snow">
+   <!-- your app -->
+</body>
 ```
 
 ### ThemeMiddleware
@@ -124,7 +117,7 @@ export default {
       /** without theme */
       plugin(themeMiddleware(({ addUtility, addComponents, addVariants }) => {
          /** Rest of the code */
-      }))
+      })),
 
       /** with theme */
       plugin(themeMiddleware('my_theme',({ addUtility, addComponents, addVariants }) => {
@@ -188,7 +181,7 @@ export default {
 
 ### AddComponents
 
-Creates TailwidCSS Components with darkmode support.
+Creates Tailwind CSS components with dark mode support.
 
 ```javascript
 //tailwind.config.js
@@ -201,7 +194,7 @@ export default {
       plugin(themeMiddleware(({ addComponents }) => {
          addComponents({
             '.icon':  '@apply w-24. h-24.',
-            '.label': [, '@apply tc-dark dark:tc-white'],
+            '.label': [, '@apply tc-gray-100'], // dark mode only
             '.action-icon': {
                _apply: '@apply frcc h-40. w-40. br-6. tc-red-800 dark:tc-red-600',
             },
@@ -223,8 +216,9 @@ export default {
 
 ### AddVariants
 
-Creates TailwidCSS ComponentVariants with darkmode support.
-It accepts T generic to indicate the keys of the components (to prevent typos).
+Creates component variants with dark mode support: each key becomes `<component>-<variant>` (`.button` + `primary` -> `.button-primary`).
+In a `tailwind.config.ts`, a generic with the component names catches typos (`addVariants<'.button' | '.icon'>({ ... })`).
+`'@apply button'` below needs `.button` added with `addComponents`.
 
 ```javascript
 //tailwind.config.js
@@ -235,10 +229,10 @@ export default {
    /** Rest of the config */
   plugins: [
       plugin(themeMiddleware(({ addVariants }) => {
-         addVariants<T>({
+         addVariants({
             '.button': {
                primary: {
-                  _apply: '@apply .button ts-16. tw-bold', //light and dark, button class added too
+                  _apply: '@apply button ts-16. tw-bold', //light and dark, .button classes included
                   backgroundColor: ['blue', 'red'], //[light, dark]
                   color: ['cadetblue', 'white'], //[light, dark]
                },
@@ -251,8 +245,8 @@ export default {
                   backgroundColor: ['blue', 'red'], //[light, dark]
                   color: ['cadetblue', 'white'], //[light, dark]
                },
-               default: ["@apply bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90","@apply bg-gray-50 text-gray-900 hover:bg-gray-50/90"]
-               destructive: "@apply bg-red-500 text-gray-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90"
+               default: ['@apply bg-gray-900 text-gray-50 shadow hover:bg-gray-900/90', '@apply bg-gray-50 text-gray-900 hover:bg-gray-50/90'],
+               destructive: '@apply bg-red-500 text-gray-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-gray-50 dark:hover:bg-red-900/90',
             },
          })
       })),
@@ -260,9 +254,9 @@ export default {
 }
 ```
 
-## Expanded TailwindCSS Default Theme
+## Expanded Tailwind CSS Default Theme
 
-**Expands the default TailwindCSS default theme with pixel values transformed into rems and more usefull utilities.**
+**Expands Tailwind CSS's default theme with px values written in rem and more values for the usual utilities.**
 
 ```javascript
 //tailwind.config.js
@@ -272,7 +266,7 @@ export default {
    /** rest of the config */
    theme: {
       extend: withMicrotailwindExtensions({
-         /** your theme (merges and overrides if colision) */
+         /** your theme extensions (merged; yours win on conflicts) */
       }),
    }
 }
@@ -327,4 +321,22 @@ export default {
  ></div>
 ```
 
-All available abreviations are in the file [abreviations.js](https://www.npmjs.com/package/microtailwind?activeTab=code).
+Every short name is in [abreviations.js](https://github.com/Lukasz17git/microtailwind/blob/master/abreviations.js).
+
+`microtailwindExperimental` adds `fs0`, `fs1`, `fg0` and `fg1` (`flex-shrink` and `flex-grow` set to `0` or `1`): `plugin(microtailwindExperimental)`.
+
+## Development
+
+| Script          | Does                                                                  |
+| --------------- | --------------------------------------------------------------------- |
+| `npm run dev`   | Runs the tests in watch mode                                          |
+| `npm test`      | Runs the tests once                                                   |
+| `npm run lint`  | Type-checks with `tsc`                                                |
+| `npm run build` | Builds ESM + CJS to `dist` and `types.d.ts` for `microtailwind/types` |
+| `npx changeset` | Adds a changeset for the next release                                 |
+
+### Releasing
+
+1. Run `npx changeset`, pick the bump type and describe the change, and commit the generated file.
+2. When pushed to `master`, CI opens a "Version Packages" PR and runs the checks on it.
+3. Merging that PR publishes to npm with [trusted publishing](https://docs.npmjs.com/trusted-publishers) (no npm token needed).
