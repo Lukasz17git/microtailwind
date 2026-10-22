@@ -1,5 +1,11 @@
 # microtailwind
 
+## 1.8.4
+
+### Patch Changes
+
+- 6808ee0: Fixed the README examples so they compile with Tailwind v3 (`'@apply button'` without the dot, missing `plugin` import and commas) and documented `microtailwindExperimental` (no code changes)
+
 ## 1.8.3
 
 ### Patch Changes
