@@ -1,5 +1,11 @@
 # microtailwind
 
+## 1.8.5
+
+### Patch Changes
+
+- 48262d6: Added IDEAS.txt with the tw() idea from tailwind-multi-class (variants grouped in objects) for a future version (no code changes)
+
 ## 1.8.4
 
 ### Patch Changes
