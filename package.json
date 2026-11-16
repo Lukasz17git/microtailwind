@@ -24,6 +24,7 @@
       "abreviations.js",
       "tailwind.config.example.js",
       "README.md",
+      "IDEAS.txt",
       "LICENSE"
    ],
    "scripts": {
