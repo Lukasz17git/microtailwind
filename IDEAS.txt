@@ -1,0 +1,30 @@
+IDEAS PARA MICROTAILWIND
+
+Ideas que aún no están en el código, guardadas como referencia por si algún día se añaden.
+
+
+1. tw(): AGRUPAR LAS VARIANTES EN OBJETOS
+
+Sale del paquete tailwind-multi-class (sus funciones tw y twTransform), que se usaba en restaurant_menu_maker.
+
+tw() sirve para agrupar las variantes (hover:, md:, dark:) en objetos en lugar de repetir el prefijo en cada
+clase. twTransform deja que Tailwind encuentre esas clases.
+
+// Input: lo que escribes en el componente
+<div className={tw(
+   'p-4 rounded',
+   isActive && 'bg-blue-500',
+   { hover: 'bg-red-500', md: { hover: 'text-lg' } },
+)} />
+
+// Output en el navegador
+// isActive = true  -> 'p-4 rounded bg-blue-500 hover:bg-red-500 md:hover:text-lg'
+// isActive = false -> 'p-4 rounded hover:bg-red-500 md:hover:text-lg'
+
+// tailwind.config.js, como en restaurant_menu_maker
+content: { files: ['./src/**/*.tsx'], transform: { DEFAULT: twTransform(tw) } },
+
+Cuando Tailwind lee el archivo, twTransform quita el `isActive &&` y ejecuta el `tw(...)`. Así Tailwind lee el
+texto 'p-4 rounded bg-blue-500 hover:bg-red-500 md:hover:text-lg'. Sin él, Tailwind solo encuentra
+`bg-red-500` y `text-lg` sueltos, no genera `hover:bg-red-500` ni `md:hover:text-lg`, y el hover no hace
+nada. Con un ternario (`a ? 'x' : 'y'`) genera las dos ramas.
